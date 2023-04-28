@@ -43,7 +43,7 @@ dependencies {
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
-
+거
     //GSON
     implementation 'com.google.code.gson:gson:2.9.0'
 
