@@ -69,6 +69,8 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+    implementation project(path: ':data')
+    implementation project(path: ':domain')
 
     //hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
