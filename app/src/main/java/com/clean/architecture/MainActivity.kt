@@ -19,10 +19,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             MovieHolicTheme {
                 navController = rememberNavController()
                 navGraph(navController = navController)
+
             }
         }
     }
