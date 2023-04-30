@@ -1,5 +1,11 @@
 package com.clean.architecture.presentation.view.home
 
+import android.app.Activity.RESULT_OK
+import android.content.IntentSender
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,11 +16,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,17 +34,65 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.clean.architecture.R
 import com.clean.architecture.presentation.view.home.components.LoginButton
+import com.clean.architecture.presentation.view.home.sign_in.GoogleAuthClient
 import com.clean.architecture.ui.theme.Black01
 import com.clean.architecture.ui.theme.MovieTypography
 import com.clean.architecture.ui.theme.Purple01
 import com.clean.data.model.MovieDto
+import com.google.android.gms.auth.api.identity.Identity.getSignInClient
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
     val state by homeViewModel.state.collectAsStateWithLifecycle()
 
+    val googleAuthUiClient by lazy {
+        GoogleAuthClient(
+            context = context,
+            oneTapClient = getSignInClient(context)
+        )
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = { result ->
+            if (result.resultCode == RESULT_OK) {
+                coroutineScope.launch {
+                    val signInResult = googleAuthUiClient.signInWithIntent(
+                        intent = result.data ?: return@launch
+                    )
+                    homeViewModel.onSignInResult(signInResult)
+                }
+
+            }
+
+        }
+    )
+
+
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+
+        }
+    }
+    LaunchedEffect(key1 = state.isSignInSuccessful) {
+        Toast.makeText(context, "Sign in Successful", Toast.LENGTH_LONG).show()
+    }
     HomeScreen {
-        homeViewModel.loginWithGoogle()
+        coroutineScope.launch {
+            val signInIntentSender = googleAuthUiClient.signIn()
+            launcher.launch(
+                IntentSenderRequest.Builder(
+                    signInIntentSender ?: return@launch
+                ).build()
+            )
+
+        }
+
     }
 
 
@@ -75,7 +132,7 @@ private fun HomeScreen(onClickLogin: () -> Unit) {
                 backgroundColor = Purple01.copy(alpha = 0.2f),
                 textColor = Color.Black
             ) {
-
+                onClickLogin()
             }
 
         }
