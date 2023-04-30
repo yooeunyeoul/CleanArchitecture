@@ -23,8 +23,13 @@ class UserRemoteDataSourceImpl(
     override fun getUserList(): Flow<List<UserDto>> =
         callbackFlow {
             ref.child("users").get().addOnSuccessListener {
-                val value = it.value
-                Log.d("value", value.toString())
+                val userList = mutableListOf<UserDto>()
+                val children = it.children
+                for (child in children) {
+                    val user = child.getValue(UserDto::class.java)
+                    user?.let { user -> userList.add(user) }
+                }
+                trySend(userList)
             }.addOnFailureListener {
                 Log.e("firebase", "Error getting data", it)
             }
