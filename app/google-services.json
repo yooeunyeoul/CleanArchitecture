@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "757992695320",
+    "project_id": "makingfriends-c2a68",
+    "storage_bucket": "makingfriends-c2a68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757992695320:android:8b55df578746f29504856d",
+        "android_client_info": {
+          "package_name": "com.clean.architecture"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "757992695320-r9csk8jdsosm0kt7slq497tnkd1jr7mr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARiXE5jEvLuUN9ZuV4_6w85ynJeWWvdME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "757992695320-r9csk8jdsosm0kt7slq497tnkd1jr7mr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
