@@ -7,9 +7,11 @@ import com.clean.architecture.util.Resource
 import com.clean.data.model.MovieDto
 import com.clean.domain.useCase.GetUserListFromFireBaseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
@@ -39,7 +41,7 @@ class HomeViewModel @Inject constructor(getUserListFromFireBaseUseCase: GetUserL
             }
             .catch {
                 Resource.Error(message = it.message ?: "", data = null)
-            }.launchIn(viewModelScope)
+            }.flowOn(Dispatchers.IO).launchIn(viewModelScope)
     }
 
 }

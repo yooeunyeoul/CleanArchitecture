@@ -17,9 +17,7 @@ class UserRemoteDataSourceImpl(
         }.addOnFailureListener {
             Log.e("firebase", "Error getting data", it)
         }
-        awaitClose {
-
-        }
+        awaitClose()
     }
 
     override fun getUserList(): Flow<List<UserDto>> =
@@ -28,7 +26,8 @@ class UserRemoteDataSourceImpl(
                 val value = it.value
                 Log.d("value", value.toString())
             }.addOnFailureListener {
-
+                Log.e("firebase", "Error getting data", it)
             }
+            awaitClose()
         }
 }

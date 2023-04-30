@@ -12,8 +12,6 @@ import com.clean.architecture.presentation.view.home.HomeViewModel
 
 @Composable
 fun navGraph(navController: NavHostController) {
-    val homeViewModel : HomeViewModel = hiltViewModel()
-    val dd by homeViewModel.state.collectAsState()
     NavHost(
         navController = navController,
         startDestination = Screen.Home.route
