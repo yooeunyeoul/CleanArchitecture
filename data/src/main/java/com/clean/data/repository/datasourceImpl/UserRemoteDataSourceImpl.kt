@@ -50,10 +50,10 @@ class UserRemoteDataSourceImpl(
                 ref.child("users").child(user.userId ?: "emptyUserId").child("userName")
                     .setValue(user.userName)
                     .addOnSuccessListener {
-                        Resource.Success(Unit)
+                        trySend(Resource.Success(Unit))
                     }
                     .addOnFailureListener {e->
-                        Resource.Error(message =e.message?:"",data = null )
+                        trySend(Resource.Error(message =e.message?:"",data = null ))
                     }
 
             }
@@ -62,10 +62,10 @@ class UserRemoteDataSourceImpl(
                 ref.child("users").child(user.userId ?: "emptyUserId").child("gender")
                     .setValue(user.gender)
                     .addOnSuccessListener {
-                        Resource.Success(Unit)
+                        trySend(Resource.Success(Unit))
                     }
                     .addOnFailureListener {e->
-                        Resource.Error(message =e.message?:"",data = null )
+                        trySend(Resource.Error(message =e.message?:"",data = null ))
                     }
             }
         }

@@ -46,7 +46,7 @@ fun NickNameScreen(
     LaunchedEffect(key1 = state) {
         when (state) {
             is Resource.Success -> {
-//                navController.navigate(Screen.Login.route)
+                navController.navigate(Screen.SettingGender.route)
             }
             is Resource.Error -> Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
             is Resource.Loading -> {
