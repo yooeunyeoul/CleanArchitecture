@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.clean.architecture.presentation.view.login.HomeScreen
+import com.clean.architecture.presentation.view.on_boarding.GenderScreen
 import com.clean.architecture.presentation.view.on_boarding.NickNameScreen
 
 @Composable
@@ -19,8 +20,12 @@ fun navGraph(navController: NavHostController) {
             HomeScreen(navController = navController, homeViewModel = hiltViewModel())
         }
 
-        composable(route = Screen.NickName.route) {
-            NickNameScreen(navController = navController, onBoardingViewModel = hiltViewModel())
+        composable(route = Screen.NickName.route) {entry->
+            NickNameScreen(navController = navController, onBoardingViewModel = hiltViewModel(entry))
+        }
+
+        composable(route = Screen.SettingGender.route) {entry->
+            GenderScreen(navController = navController, onBoardingViewModel = hiltViewModel(entry))
         }
     }
 }

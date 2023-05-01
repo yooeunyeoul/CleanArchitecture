@@ -35,14 +35,11 @@ import androidx.navigation.NavController
 import com.clean.architecture.R
 import com.clean.architecture.presentation.navigation.Screen
 import com.clean.architecture.presentation.view.login.components.LoginButton
-import com.clean.architecture.presentation.view.login.sign_in.GoogleAuthClient
 import com.clean.architecture.ui.theme.Black01
 import com.clean.architecture.ui.theme.MovieTypography
 import com.clean.architecture.ui.theme.Purple01
 import com.clean.data.model.MovieDto
-import com.google.android.gms.auth.api.identity.Identity.getSignInClient
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @Composable
 fun HomeScreen(navController: NavController, homeViewModel: LoginViewModel) {
@@ -88,7 +85,7 @@ fun HomeScreen(navController: NavController, homeViewModel: LoginViewModel) {
                 }
 
                 loginState.data?.gender == null -> {
-                    Toast.makeText(context, "젠더없다 이거", Toast.LENGTH_LONG).show()
+                    navController.navigate(Screen.SettingGender.route)
                 }
             }
         }
