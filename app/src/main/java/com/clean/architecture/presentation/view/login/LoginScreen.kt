@@ -1,7 +1,6 @@
-package com.clean.architecture.presentation.view.home
+package com.clean.architecture.presentation.view.login
 
 import android.app.Activity.RESULT_OK
-import android.content.IntentSender
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,28 +33,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.clean.architecture.R
-import com.clean.architecture.presentation.view.home.components.LoginButton
-import com.clean.architecture.presentation.view.home.sign_in.GoogleAuthClient
+import com.clean.architecture.presentation.navigation.Screen
+import com.clean.architecture.presentation.view.login.components.LoginButton
+import com.clean.architecture.presentation.view.login.sign_in.GoogleAuthClient
 import com.clean.architecture.ui.theme.Black01
 import com.clean.architecture.ui.theme.MovieTypography
 import com.clean.architecture.ui.theme.Purple01
 import com.clean.data.model.MovieDto
 import com.google.android.gms.auth.api.identity.Identity.getSignInClient
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @Composable
-fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
+fun HomeScreen(navController: NavController, homeViewModel: LoginViewModel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val state by homeViewModel.state.collectAsStateWithLifecycle()
-
-    val googleAuthUiClient by lazy {
-        GoogleAuthClient(
-            context = context,
-            oneTapClient = getSignInClient(context)
-        )
-    }
+    val loginState by homeViewModel.loginState.collectAsStateWithLifecycle()
+    val googleAuthUiClient = homeViewModel.googleAuthClient
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartIntentSenderForResult(),
@@ -66,11 +62,16 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
                     )
                     homeViewModel.onSignInResult(signInResult)
                 }
-
             }
-
         }
     )
+
+    LaunchedEffect(key1 = Unit) {
+        if (googleAuthUiClient.getSignedInUser() != null) {
+            Toast.makeText(context, "Auto  Login Successful", Toast.LENGTH_LONG).show()
+            homeViewModel.getUser(googleAuthUiClient.getSignedInUser()?.userId ?: "")
+        }
+    }
 
 
     LaunchedEffect(key1 = state.signInError) {
@@ -79,8 +80,25 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
 
         }
     }
+    LaunchedEffect(key1 = loginState) {
+        if (loginState.data != null) {
+            when {
+                loginState.data?.userName == null -> {
+                    navController.navigate(Screen.NickName.route)
+                }
+
+                loginState.data?.gender == null -> {
+                    Toast.makeText(context, "젠더없다 이거", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
     LaunchedEffect(key1 = state.isSignInSuccessful) {
-        Toast.makeText(context, "Sign in Successful", Toast.LENGTH_LONG).show()
+        if (state.isSignInSuccessful) {
+            Toast.makeText(context, "Sign in Successful", Toast.LENGTH_LONG).show()
+            homeViewModel.getUser(googleAuthUiClient.getSignedInUser()?.userId ?: "")
+            homeViewModel.resetState()
+        }
     }
     HomeScreen {
         coroutineScope.launch {
@@ -102,12 +120,16 @@ fun HomeScreen(navController: NavController, homeViewModel: HomeViewModel) {
 private fun HomeScreen(onClickLogin: () -> Unit) {
 
     Box(Modifier.fillMaxSize()) {
-        Column(Modifier.fillMaxWidth()) {
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .align(Alignment.TopCenter)
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.main),
                 contentDescription = null,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .widthIn(0.dp, max = 500.dp)
                     .padding(start = 40.dp, end = 40.dp),
                 contentScale = ContentScale.FillWidth
             )

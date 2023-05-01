@@ -1,4 +1,4 @@
-package com.clean.architecture.presentation.view.home.components
+package com.clean.architecture.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,17 +29,18 @@ import com.clean.architecture.ui.theme.Gray700
 import com.clean.architecture.ui.theme.MovieTypography
 
 @Composable
-fun LoginButton(
+fun BottomButton(
     text: String,
     icon: Painter?,
     textColor: Color = Gray700,
     borderColor: Color = Color.Transparent,
     borderWidth: Dp = 0.dp,
     backgroundColor: Color = Color.Transparent,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .height(56.dp)
             .fillMaxWidth()
             .padding(start = 24.dp, end = 24.dp)
@@ -50,19 +51,6 @@ fun LoginButton(
                 onClick()
             },
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier.padding(start = 8.dp)
-                .background(color = Color.White, shape = CircleShape).size(36.dp).align(Alignment.CenterStart)
-        ) {
-            icon?.let {
-                Image(
-                    modifier = Modifier.size(24.dp),
-                    painter = it,
-                    contentDescription = null
-                )
-            }
-        }
         Text(
             text = text,
             color = textColor,
@@ -76,11 +64,12 @@ fun LoginButton(
 @Composable
 fun AppleLoginButtonPreview() {
     Surface {
-        LoginButton(
+        BottomButton(
             text = "Apple 계정으로 계속하기",
             icon = painterResource(id = R.drawable.icon_google),
             textColor = Gray700,
-            borderColor = Gray300
+            borderColor = Gray300,
+
         ) {
 
         }

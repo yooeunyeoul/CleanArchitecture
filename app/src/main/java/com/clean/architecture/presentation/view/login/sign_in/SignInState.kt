@@ -1,4 +1,4 @@
-package com.clean.architecture.presentation.view.home.sign_in
+package com.clean.architecture.presentation.view.login.sign_in
 
 data class SignInState(
     val isSignInSuccessful: Boolean = false,
