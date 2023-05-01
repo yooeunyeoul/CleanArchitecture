@@ -1,10 +1,10 @@
 package com.clean.domain
 
 data class User(
-    val userId: Int,
+    val userId: String?=null,
     val userName: String? = null,
     val email: String? = null,
-    val gender: Int? = 0
+    val gender: Int? = null
 ) {
 
 
